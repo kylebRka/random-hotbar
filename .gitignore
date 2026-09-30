@@ -1,0 +1,20 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.DS_Store
+build/
+dist/
+*.egg-info/
+*.spec
+
+# Windows development stays local until its first public release.
+/windows/
+/random_hotbar/backends/windows.py
+/scripts/sync_windows.py
+
+# Local configuration and credentials.
+.env
+.env.*
+*.pem
+*.key

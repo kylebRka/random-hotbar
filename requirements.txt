@@ -1,0 +1,2 @@
+# Tkinter is included with the Python installers for macOS and Windows.
+pyobjc-framework-Quartz>=10.0; sys_platform == "darwin"
