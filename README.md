@@ -1,9 +1,11 @@
 # Random Hotbar
 
+[English](README.md) · [Русский](README.ru.md)
+
 A small Minecraft building companion that randomly switches hotbar slots, helping
 you mix blocks into natural-looking walls, paths, and roofs.
 
-**macOS · Python 3.10+ · English interface**
+**macOS · Python 3.10+ · English and Russian interface**
 
 > **Windows is in development.** This repository currently contains only the macOS version.
 
@@ -17,6 +19,7 @@ you mix blocks into natural-looking walls, paths, and roofs.
 - Soft, rounded cards, inputs, and dropdown menus.
 - Light, dark, and system palettes; keyboard navigation in dropdowns.
 - Start and Stop buttons available on every tab.
+- Switch between English and Russian using the button in the top-right corner.
 
 ## Installation
 
@@ -49,6 +52,10 @@ Accessibility** for the application running Python, such as Terminal or your IDE
 Then restart that application.
 
 ## Usage
+
+English is the default language. Click **Русский** in the top-right corner to
+switch languages immediately; click **English** to switch back. Changing language
+keeps your settings and any active run.
 
 1. Place your chosen blocks in the first Minecraft hotbar slots.
 2. Choose the number of slots and switching speed.

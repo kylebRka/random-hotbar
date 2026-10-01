@@ -5,9 +5,10 @@ from .widgets import rounded_rect
 
 
 class RoundedField(tk.Canvas):
-    def __init__(self, master, variable, lower=None, upper=None, values=None):
+    def __init__(self, master, variable, lower=None, upper=None, values=None, label=None):
         super().__init__(master, width=px(master,160), height=px(master,40),
                          highlightthickness=0, bd=0, takefocus=bool(values))
+        self.label = label or (lambda value: value)
         self.variable = variable
         self.lower, self.upper = lower, upper
         self.values = tuple(values) if values is not None else None
@@ -106,7 +107,7 @@ class RoundedField(tk.Canvas):
         rounded_rect(self,1,1,width-1,height-1,px(self,12),fill=fill,outline=border,width=1)
         foreground=c["fg"] if self.enabled else c["muted"]
         if self.values is not None:
-            self.create_text(px(self,14),height/2,text=self.variable.get(),anchor="w",fill=foreground,
+            self.create_text(px(self,14),height/2,text=self.label(self.variable.get()),anchor="w",fill=foreground,
                              font=(c["font"],12))
             x,y=width-px(self,18),height/2
             self.create_line(x-px(self,4),y-px(self,2),x,y+px(self,2),x+px(self,4),y-px(self,2),
@@ -157,7 +158,7 @@ class RoundedField(tk.Canvas):
                 top=margin+i*row_height
                 if i==self._popup_index:
                     rounded_rect(menu,margin,top,width-margin,top+row_height,px(self,9),fill=c["hover"])
-                menu.create_text(px(self,16),top+row_height/2,anchor="w",text=value,
+                menu.create_text(px(self,16),top+row_height/2,anchor="w",text=self.label(value),
                                  fill=c["fg"],font=(c["font"],12))
                 if value==self.variable.get():
                     menu.create_text(width-px(self,18),top+row_height/2,text="✓",fill=c["accent"],font=(c["font"],12))

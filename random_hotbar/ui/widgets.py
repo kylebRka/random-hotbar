@@ -173,9 +173,10 @@ class ScrollablePage(ttk.Frame):
 
 class RoundedNavigation(tk.Canvas):
     """A single rounded capsule, with arrow-key navigation and no opaque seams."""
-    def __init__(self,master,names,command):
+    def __init__(self,master,names,command,label=None):
         super().__init__(master,height=px(master,52),highlightthickness=0,bd=0,
                          takefocus=True,cursor="hand2")
+        self.label=label or (lambda name: name)
         self.names=tuple(names)
         self.command=command
         self.selected=self.names[0]
@@ -233,7 +234,7 @@ class RoundedNavigation(tk.Canvas):
             if selected and self.focus_get() is self:
                 rounded_rect(self,x,inset,x+part,height-inset-2,height/2-inset-2,
                              fill="",outline=c["accent"],width=1)
-            self.create_text(x+part/2,height/2-1,text=name,fill=c["fg"] if selected else c["muted"],
+            self.create_text(x+part/2,height/2-1,text=self.label(name),fill=c["fg"] if selected else c["muted"],
                              font=(c["font"],12,"bold" if selected else "normal"))
 
 

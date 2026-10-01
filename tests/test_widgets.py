@@ -31,6 +31,48 @@ class FieldTests(unittest.TestCase):
             field._close_popup()
         self.app.destroy()
 
+    def test_language_switch_keeps_values_page_and_active_state(self):
+        from random_hotbar.config import RunConfig
+        self.assertEqual(self.app.language.get(), "en")
+        self.app.slots.set("7")
+        self.app.speed.set("Medium")
+        self.app.theme.set("Dark")
+        self.app._show_page("Settings")
+        self.app.pending = True
+        self.app._set_running(True)
+        self.app._set_status("Running · last key: {key}", key="7")
+        self.app._toggle_language()
+        self.app.update()
+        self.assertEqual(self.app.start_button.text, "Начать перемешивание")
+        self.assertEqual(self.app.status.get(), "Работает · последняя клавиша: 7")
+        self.assertEqual(self.app.speed.get(), "Medium")
+        self.assertEqual(self.app.theme.get(), "Dark")
+        self.assertEqual(self.app.slots.get(), "7")
+        self.assertEqual(self.app.navigation.selected, "Settings")
+        self.assertEqual(str(self.app.start_button.cget("state")), "disabled")
+        self.assertEqual(RunConfig(speed=self.app.speed.get()).speed, "Medium")
+        self.app._toggle_language()
+        self.assertEqual(self.app.start_button.text, "Start shuffling")
+        self.assertEqual(self.app.status.get(), "Running · last key: 7")
+        self.assertTrue(self.app.pending)
+        self.assertEqual(self.errors, [])
+
+    def test_russian_dropdown_uses_canonical_values_and_errors(self):
+        from random_hotbar.i18n import translate
+        self.app._toggle_language()
+        field=next(field for field in self.app.fields if field.variable is self.app.speed)
+        field._open_popup()
+        self.app.update()
+        menu=field.popup.winfo_children()[0]
+        labels=[menu.itemcget(item,"text") for item in menu.find_all() if menu.type(item)=="text"]
+        self.assertIn("Быстро",labels)
+        menu.event_generate("<Up>")
+        menu.event_generate("<Return>")
+        self.assertEqual(self.app.speed.get(),"Medium")
+        self.assertEqual(translate("The number of slots must be between 2 and 9.","ru"),
+                         "Количество клавиш должно быть от 2 до 9.")
+        self.assertEqual(translate("unexpected {error}","ru"),"unexpected {error}")
+
     def test_numeric_bounds_and_disabled_field(self):
         field=next(field for field in self.app.fields if field.variable is self.app.slots)
         self.app.slots.set("9")

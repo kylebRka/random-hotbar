@@ -20,6 +20,12 @@ Quartz is imported only when a run starts. The macOS backend uses physical key
 codes and CGEvent. Permission is checked with
 [CGPreflightPostEventAccess](https://developer.apple.com/documentation/coregraphics/cgpreflightposteventaccess()).
 
+`i18n.translate` maps English source strings to Russian. Widgets keep canonical
+English identifiers for pages, speeds, and themes; only their displayed labels
+change. The language button updates widgets in place, closes open menus, and
+translates the current status without restarting the worker. English is the
+default; language selection lasts for the current session.
+
 Cards and inputs use continuous Canvas outlines with explicit fills and borders
 so Tk does not fall back to black. Dropdowns use an opaque background matching
 the selected palette. There is no visible scrollbar; pages support wheel
