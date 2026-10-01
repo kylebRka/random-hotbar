@@ -1,43 +1,43 @@
-# Устройство проекта
+# Architecture
 
-Публичная версия поддерживает macOS. Windows находится в разработке и не входит
-в текущую публикацию.
+The public release supports macOS. Windows is in development and is not included
+in this release.
 
-`RunConfig` — неизменяемый снимок настроек одного запуска. Он проверяет диапазоны
-и допускает только клавиши `1–9`. `selection.choose_key` выбирает клавишу без зависимости
-от интерфейса или операционной системы.
+`RunConfig` is an immutable snapshot of one run's settings. It validates ranges
+and accepts only keys `1–9`. `selection.choose_key` selects a key independently
+of the interface and operating system.
 
-`HotbarRunner` владеет рабочим потоком и отдельным событием отмены для каждого
-запуска. Отсчёт и паузы используют `Event.wait`, поэтому отменяются сразу.
-Повторный запуск отклоняется, пока старый поток жив. Настройки передаются
-в поток один раз; обращения к Tkinter из него отсутствуют.
+`HotbarRunner` owns a worker thread and a separate cancellation event for each
+run. The countdown and pauses use `Event.wait` so they can be cancelled promptly.
+A new run is rejected while the previous worker is alive. Settings are passed to
+the worker once; the worker never accesses Tkinter.
 
-Рабочий поток отправляет события `started`, `key`, `error`, `stopped` в очередь.
-Главный поток опрашивает её через `after`, показывает ошибки и обновляет интерфейс.
-Закрытие окна сначала отменяет работу и ждёт отпускания текущей клавиши.
+The worker sends `started`, `key`, `error`, and `stopped` events through a queue.
+The main thread polls it with `after`, displays errors, and updates the interface.
+Closing the window cancels the worker and waits for the current key to be released.
 
-Модуль Quartz загружается только при старте. macOS использует физические коды
-клавиш и CGEvent. Разрешение проверяется через
+Quartz is imported only when a run starts. The macOS backend uses physical key
+codes and CGEvent. Permission is checked with
 [CGPreflightPostEventAccess](https://developer.apple.com/documentation/coregraphics/cgpreflightposteventaccess()).
 
-Карточки и поля рисуются цельными контурами Canvas. Заливка и границы задаются
-явно, чтобы Tk не использовал чёрный цвет по умолчанию. Выпадающие меню используют
-обычный фон выбранной темы. Видимого ползунка нет; при нехватке высоты страницы
-прокручиваются колесом. Старт и остановка закреплены внизу окна.
+Cards and inputs use continuous Canvas outlines with explicit fills and borders
+so Tk does not fall back to black. Dropdowns use an opaque background matching
+the selected palette. There is no visible scrollbar; pages support wheel
+scrolling when space is limited. Start and Stop stay at the bottom of the window.
 
-## Ручная проверка на macOS
+## Manual checks on macOS
 
-1. Проверить наличие Tkinter, запустить приложение, открыть все три вкладки.
-2. Проверить светлую, тёмную и системную палитры, изменение размера окна.
-3. Ввести недопустимые диапазон, вероятность и приоритет вне диапазона:
-   убедиться, что показана ошибка и нажатия не начались.
-4. Выставить задержку 5 секунд, нажать старт и отменить во время отсчёта.
-5. Запустить без приоритета и переключиться в пустой текстовый редактор:
-   появляются только выбранные цифры. Остановить и убедиться, что ввод прекратился.
-6. Проверить приоритет 0% и 100% на первом и девятом слотах.
-7. Быстро нажать стоп и старт, затем закрыть окно во время работы:
-   не должно оставаться второго цикла или зажатой клавиши.
-8. Проверить выбор слотов в Minecraft.
+1. Check that Tkinter is installed, launch the app, and open all three tabs.
+2. Test Light, Dark, and System palettes and resize the window.
+3. Enter an invalid slot count, probability, or priority outside the selected range.
+   Confirm that an error appears and no keys are sent.
+4. Set a five-second delay, start, and cancel during the countdown.
+5. Start without priority and switch to an empty text editor. Confirm that only
+   the selected digits appear, then stop and verify that input stops.
+6. Test priority probabilities of 0% and 100% for the first and ninth slots.
+7. Quickly stop and restart, then close the window during a run. Confirm that
+   no second loop remains and no key stays held.
+8. Verify slot switching in Minecraft.
 
-Автоматические тесты не подтверждают доставку событий конкретной игре и не
-заменяют ручную проверку в Minecraft.
+Automated tests do not confirm event delivery to a particular game and do not
+replace manual testing in Minecraft.

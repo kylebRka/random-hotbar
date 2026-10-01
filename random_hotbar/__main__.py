@@ -8,8 +8,8 @@ def main():
         if error.name not in ("tkinter", "_tkinter"):
             raise
         raise SystemExit(
-            "В этой сборке Python отсутствует Tkinter. Используйте Python с Tcl/Tk.\n"
-            "Проверка: python3 -m tkinter. Инструкции: README.md."
+            "This Python build does not include Tkinter. Use Python with Tcl/Tk.\n"
+            "Check: python3 -m tkinter. See README.md for setup instructions."
         ) from None
     HotbarApp().mainloop()
 

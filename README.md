@@ -1,35 +1,35 @@
 # Random Hotbar
 
-Помощник для строительства в Minecraft: случайно переключает слоты хотбара,
-чтобы чередовать блоки и создавать более живые текстуры стен, дорог и крыш.
+A small Minecraft building companion that randomly switches hotbar slots, helping
+you mix blocks into natural-looking walls, paths, and roofs.
 
-**macOS · Python 3.10+ · интерфейс на русском**
+**macOS · Python 3.10+ · English interface**
 
-> **Windows — в разработке.** Сейчас в репозитории опубликована только версия для macOS.
+> **Windows is in development.** This repository currently contains only the macOS version.
 
-## Возможности
+## Features
 
-- Клавиши **1–9** верхнего ряда — для девяти слотов хотбара Minecraft.
-- Три скорости со случайной паузой между нажатиями.
-- Приоритетная клавиша с вероятностью от 0 до 100%.
-- Отсчёт перед запуском: по умолчанию 3 секунды, чтобы перейти в игру.
-- Визуальный хотбар с подсветкой последнего нажатия.
-- Матовый интерфейс со скруглёнными карточками, полями и меню.
-- Светлая, тёмная и системная палитры; управление меню с клавиатуры.
-- Кнопки старта и остановки доступны на всех вкладках.
+- Uses number-row keys **1–9**, matching Minecraft's nine hotbar slots.
+- Three speeds with a randomized pause between key presses.
+- Optional priority key with a selection chance from 0 to 100%.
+- Start countdown: three seconds by default to switch to the game.
+- Hotbar preview that highlights the last key pressed.
+- Soft, rounded cards, inputs, and dropdown menus.
+- Light, dark, and system palettes; keyboard navigation in dropdowns.
+- Start and Stop buttons available on every tab.
 
-## Установка и запуск
+## Installation
 
-Нужен Python 3.10+ с Tkinter. Проверка:
+You need Python 3.10+ with Tkinter. Check your installation:
 
 ```sh
 python3 -m tkinter
 ```
 
-Должно открыться тестовое окно. Если Tkinter отсутствует, установите Python
-с поддержкой Tcl/Tk, например с [python.org](https://www.python.org/downloads/macos/).
+A test window should open. If Tkinter is missing, install Python with Tcl/Tk
+support, for example from [python.org](https://www.python.org/downloads/macos/).
 
-Скачайте проект через **Code → Download ZIP** или клонируйте репозиторий:
+Download the project using **Code → Download ZIP**, or clone it:
 
 ```sh
 git clone https://github.com/kylebRka/random-hotbar.git
@@ -40,87 +40,87 @@ python3 -m pip install -r requirements.txt
 python3 main.py
 ```
 
-Альтернативный запуск: `python3 -m random_hotbar`.
+You can also launch it with `python3 -m random_hotbar`.
 
-### Разрешение macOS
+### macOS permissions
 
-Для отправки клавиш разрешите **Настройки системы → Конфиденциальность и безопасность
-→ Универсальный доступ** для приложения, из которого запускаете Python
-(например, Terminal или IDE). Затем перезапустите это приложение.
+To send keyboard events, enable **System Settings → Privacy & Security →
+Accessibility** for the application running Python, such as Terminal or your IDE.
+Then restart that application.
 
-## Как использовать
+## Usage
 
-1. Положите нужные блоки в первые слоты хотбара Minecraft.
-2. Выберите количество используемых клавиш и скорость.
-3. При желании задайте приоритет в настройках и включите его в рандомайзере.
-4. Нажмите **Начать перемешивание** и переключитесь в Minecraft до конца отсчёта.
-5. Стройте — программа будет менять выбранный слот.
-6. Вернитесь в окно и нажмите **Остановить**, когда закончите.
+1. Place your chosen blocks in the first Minecraft hotbar slots.
+2. Choose the number of slots and switching speed.
+3. Optionally set a priority key in Settings and enable it on the Randomizer tab.
+4. Press **Start shuffling** and switch to Minecraft before the countdown ends.
+5. Build while the app switches the selected slot.
+6. Return to the app and press **Stop** when you are done.
 
-Нажатия получает **активное окно**. Автоматического определения Minecraft и глобальной
-горячей клавиши остановки пока нет. Закрытие программы тоже останавливает цикл.
-Настройки действуют до закрытия приложения и не сохраняются на диск.
+Keyboard events go to the **active window**. The app does not automatically detect
+Minecraft and currently has no global stop shortcut. Closing the app also stops
+the loop. Settings are kept for the current session and are not saved to disk.
 
-## Скорость и приоритет
+## Speed and priority
 
-| Скорость | Пауза между нажатиями |
+| Speed | Pause between presses |
 | --- | --- |
-| Медленно | 0,8–1,5 секунды |
-| Средне | 0,4–0,8 секунды |
-| Быстро | 0,2–0,4 секунды |
+| Slow | 0.8–1.5 seconds |
+| Medium | 0.4–0.8 seconds |
+| Fast | 0.2–0.4 seconds |
 
-Каждое нажатие дополнительно удерживается 0,05 секунды.
-Без приоритета все выбранные клавиши равновероятны. При приоритете 40% выбранная
-клавиша получает 40% нажатий, а остальные делят оставшиеся 60% поровну.
-Приоритетная клавиша должна входить в выбранный диапазон.
+Each key is also held for 0.05 seconds. Without priority, every selected key is
+equally likely. With a priority chance of 40%, that key receives 40% of presses;
+the other keys share the remaining 60% equally. The priority key must be within
+the selected slot range.
 
-## Структура проекта
+## Project layout
 
 ```text
-main.py                     # запуск приложения
-requirements.txt            # macOS Quartz через PyObjC
+main.py                     # application entry point
+requirements.txt            # macOS Quartz bindings through PyObjC
 random_hotbar/
-  config.py                 # параметры и валидация
-  selection.py              # случайный выбор клавиши
-  runner.py                 # фоновый цикл и отмена
+  config.py                 # configuration and validation
+  selection.py              # random key selection
+  runner.py                 # worker loop and cancellation
   backends/
-    macos.py                # отправка нажатий через Quartz
+    macos.py                # keyboard events through Quartz
   ui/
-    app.py                  # окно и управление
-    themes.py               # палитры и типографика
-    widgets.py              # карточки, кнопки и навигация
-    fields.py               # числовые поля и выпадающие меню
-    platform.py             # размеры элементов
-tests/                      # тесты без реальных нажатий
-docs/architecture.md        # устройство проекта
+    app.py                  # window and controls
+    themes.py               # palettes and typography
+    widgets.py              # cards, buttons, and navigation
+    fields.py               # numeric inputs and dropdowns
+    platform.py             # display sizing
+tests/                      # tests without real keyboard events
+docs/architecture.md        # architecture notes
 ```
 
-## Проверка
+## Development checks
 
-В активированном окружении:
+With the virtual environment activated:
 
 ```sh
 python3 -m unittest discover -s tests -v
 python3 -m compileall -q random_hotbar main.py
 ```
 
-Тесты проверяют распределение вероятностей, диапазоны, отмену запуска,
-обработку ошибок, переключение тем, поля и меню. Они не отправляют реальные нажатия.
-Тесты интерфейса требуют Tkinter и графического сеанса.
-Проверки GitHub Actions запускают тесты логики и проверку синтаксиса.
+Tests cover probability distributions, validation, cancellation, error handling,
+theme switching, inputs, and dropdown menus. They do not send real key presses.
+UI tests require Tkinter and a graphical session. GitHub Actions runs the core
+logic tests and syntax checks.
 
-## Поддержка платформ
+## Platform support
 
-| Платформа | Статус |
+| Platform | Status |
 | --- | --- |
-| macOS | Текущая опубликованная версия |
-| Windows | В разработке; исходники и сборка пока не опубликованы |
+| macOS | Current published version |
+| Windows | In development; source and builds are not published yet |
 
-## Планы
+## Roadmap
 
-- Подготовить и проверить версию для Windows.
-- Добавить глобальную горячую клавишу остановки.
-- Сохранять настройки между запусками.
+- Prepare and validate the Windows version.
+- Add a global stop shortcut.
+- Save settings between sessions.
 
-Нашли ошибку или есть идея? Создайте **Issue** с описанием, версией Python и macOS.
-Если речь об интерфейсе, приложите скриншот.
+Found a bug or have an idea? Open an **Issue** with a description and your Python
+and macOS versions. Include a screenshot for interface issues.

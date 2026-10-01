@@ -29,14 +29,14 @@ class HotbarApp(tk.Tk):
         self.runner = HotbarRunner()
         self.pending = False
         self.deadline = 0.0
-        self.theme = tk.StringVar(value="Светлая")
+        self.theme = tk.StringVar(value="Light")
         self.slots = tk.StringVar(value="9")
-        self.speed = tk.StringVar(value="Быстро")
+        self.speed = tk.StringVar(value="Fast")
         self.bias = tk.BooleanVar(value=False)
         self.priority = tk.StringVar(value="1")
         self.chance = tk.StringVar(value="40")
         self.delay = tk.StringVar(value="3")
-        self.status = tk.StringVar(value="Готов к строительству")
+        self.status = tk.StringVar(value="Ready to build")
         self.controls = []
         self.panels = []
         self.fields = []
@@ -58,12 +58,12 @@ class HotbarApp(tk.Tk):
         outer.rowconfigure(2,weight=1)
         heading = ttk.Frame(outer)
         heading.grid(row=0,column=0,sticky="ew")
-        ttk.Label(heading, text="ДЛЯ ТВОЕГО СЛЕДУЮЩЕГО БИЛДА", style="Eyebrow.TLabel").pack(anchor="w")
+        ttk.Label(heading, text="FOR YOUR NEXT BUILD", style="Eyebrow.TLabel").pack(anchor="w")
         ttk.Label(heading, text="Random Hotbar", style="Title.TLabel").pack(anchor="w", pady=(4, 0))
-        ttk.Label(heading, text="Маленькая случайность. Живые текстуры.", style="Muted.TLabel").pack(anchor="w", pady=(2, 0))
+        ttk.Label(heading, text="A little randomness. Richer textures.", style="Muted.TLabel").pack(anchor="w", pady=(2, 0))
 
         self.pages = {}
-        names=("Рандомайзер","Настройки","Помощь")
+        names=("Randomizer","Settings","Help")
         self.navigation=RoundedNavigation(outer,names,self._show_page)
         self.navigation.grid(row=1,column=0,sticky="ew",pady=(px(self,18),px(self,16)))
         self.page_host = ttk.Frame(outer)
@@ -73,22 +73,22 @@ class HotbarApp(tk.Tk):
         play, settings, help_page = (page.content for page in self.pages.values())
 
         preview = self._panel(play, 156)
-        ttk.Label(preview, text="ХОТБАР", style="CardMuted.TLabel").pack(anchor="w")
+        ttk.Label(preview, text="HOTBAR", style="CardMuted.TLabel").pack(anchor="w")
         self.hotbar = tk.Canvas(preview, height=px(self,58), highlightthickness=0, bd=0)
         self.hotbar.pack(fill="x", pady=(9, 5))
         self.hotbar.bind("<Configure>", self._draw_hotbar)
-        ttk.Label(preview, text="Подсвеченный слот — последнее нажатие", style="CardMuted.TLabel").pack(anchor="w")
+        ttk.Label(preview, text="The highlighted slot is the last key pressed", style="CardMuted.TLabel").pack(anchor="w")
 
         parameters = self._panel(play, 240)
-        ttk.Label(parameters, text="Ритм строительства", style="CardTitle.TLabel").grid(row=0, column=0, columnspan=2, sticky="w", pady=(0, 8))
-        self._field(parameters, 1, "Количество клавиш", self.slots, 2, 9)
-        self._field(parameters, 2, "Скорость переключения", self.speed, values=tuple(SPEEDS))
-        self._field(parameters, 3, "Время перейти в игру, сек.", self.delay, 0, 30)
+        ttk.Label(parameters, text="Your building rhythm", style="CardTitle.TLabel").grid(row=0, column=0, columnspan=2, sticky="w", pady=(0, 8))
+        self._field(parameters, 1, "Number of slots", self.slots, 2, 9)
+        self._field(parameters, 2, "Switching speed", self.speed, values=tuple(SPEEDS))
+        self._field(parameters, 3, "Start delay, seconds", self.delay, 0, 30)
 
         priority = self._panel(play, 64, padding=18)
         priority.master.pack_configure(pady=0)
         priority.columnconfigure(0, weight=1)
-        bias = RoundCheckbutton(priority,text="Приоритетная клавиша",variable=self.bias)
+        bias = RoundCheckbutton(priority,text="Priority key",variable=self.bias)
         self.bias_control=bias
         bias.grid(row=0, column=0, sticky="w")
         self.controls.append((bias, "normal"))
@@ -98,29 +98,29 @@ class HotbarApp(tk.Tk):
 
         actions = ttk.Frame(outer)
         actions.grid(row=3,column=0,sticky="ew",pady=(px(self,12),0))
-        self.start_button = ActionButton(actions, "Начать перемешивание", self._start, primary=True, width=380)
+        self.start_button = ActionButton(actions, "Start shuffling", self._start, primary=True, width=380)
         self.start_button.pack(side="left", fill="x", expand=True, padx=(0, 12))
-        self.stop_button = ActionButton(actions, "Остановить", self._stop, width=170)
+        self.stop_button = ActionButton(actions, "Stop", self._stop, width=170)
         self.stop_button.pack(side="right")
         self.stop_button.configure(state="disabled")
 
         preferences = self._panel(settings, 260)
-        ttk.Label(preferences, text="Подстрой под свой стиль", style="CardTitle.TLabel").grid(row=0, column=0, columnspan=2, sticky="w", pady=(0, 14))
-        self._field(preferences, 1, "Приоритетная клавиша", self.priority, values=tuple("123456789"))
-        self._field(preferences, 2, "Вероятность её выбора, %", self.chance, 0, 100)
-        self._field(preferences, 3, "Оформление", self.theme, values=("Тёмная", "Светлая", "Системная"), lock=False)
+        ttk.Label(preferences, text="Make it your own", style="CardTitle.TLabel").grid(row=0, column=0, columnspan=2, sticky="w", pady=(0, 14))
+        self._field(preferences, 1, "Priority key", self.priority, values=tuple("123456789"))
+        self._field(preferences, 2, "Selection chance, %", self.chance, 0, 100)
+        self._field(preferences, 3, "Appearance", self.theme, values=("Dark", "Light", "System"), lock=False)
         explanation = self._panel(settings, 154)
-        ttk.Label(explanation, text="Как работает приоритет", style="CardTitle.TLabel").pack(anchor="w", pady=(0, 10))
-        ttk.Label(explanation, text="При 40% выбранная клавиша получает 40% нажатий.\nОстальные делят оставшиеся 60% поровну.\nВыбери клавишу внутри диапазона и включи приоритет\nна вкладке рандомайзера.", style="CardMuted.TLabel", justify="left").pack(anchor="w")
-        ttk.Label(settings, text="Настройки действуют до закрытия приложения.", style="Muted.TLabel").pack(anchor="w", pady=8)
+        ttk.Label(explanation, text="How priority works", style="CardTitle.TLabel").pack(anchor="w", pady=(0, 10))
+        ttk.Label(explanation, text="At 40%, the priority key gets 40% of all presses.\nThe other keys share the remaining 60% equally.\nChoose a key within your slot range and enable priority\non the Randomizer tab.", style="CardMuted.TLabel", justify="left").pack(anchor="w")
+        ttk.Label(settings, text="Settings last until you close the app.", style="Muted.TLabel").pack(anchor="w", pady=8)
 
         guide = self._panel(help_page, 310)
-        ttk.Label(guide, text="От блоков к красивой текстуре", style="CardTitle.TLabel").pack(anchor="w", pady=(0, 16))
+        ttk.Label(guide, text="From blocks to beautiful textures", style="CardTitle.TLabel").pack(anchor="w", pady=(0, 16))
         for number, title, detail in (
-            ("01", "Собери палитру", "Разложи блоки в первые слоты хотбара."),
-            ("02", "Выбери ритм", "Настрой число клавиш, скорость и приоритет."),
-            ("03", "Начинай строить", "Нажми старт и перейди в игру за время отсчёта."),
-            ("04", "Останови, когда готово", "Вернись в приложение и нажми «Остановить»."),
+            ("01", "Build a palette", "Place your blocks in the first hotbar slots."),
+            ("02", "Find your rhythm", "Choose your slot count, speed, and priority."),
+            ("03", "Start building", "Press Start and switch to the game during the countdown."),
+            ("04", "Stop when you are done", "Return to the app and press Stop."),
         ):
             row = tk.Frame(guide)
             row.pack(fill="x", pady=(0, 12))
@@ -132,8 +132,8 @@ class HotbarApp(tk.Tk):
             ttk.Label(text, text=title, style="Card.TLabel").pack(anchor="w")
             ttk.Label(text, text=detail, style="CardMuted.TLabel").pack(anchor="w")
         notes = self._panel(help_page, 156)
-        ttk.Label(notes, text="Полезно знать", style="CardTitle.TLabel").pack(anchor="w", pady=(0, 10))
-        ttk.Label(notes, text="Нажатия получает активное окно. Глобальной клавиши\nостановки нет; закрытие приложения останавливает цикл.\n\nИспользуются клавиши 1–9 верхнего ряда клавиатуры.",
+        ttk.Label(notes, text="Good to know", style="CardTitle.TLabel").pack(anchor="w", pady=(0, 10))
+        ttk.Label(notes, text="Keys go to the active window. There is no global\nstop shortcut; closing the app stops the loop.\n\nUses keys 1–9 on the top row of your keyboard.",
                   style="CardMuted.TLabel", justify="left").pack(anchor="w")
 
         footer = ttk.Frame(outer)
@@ -142,7 +142,7 @@ class HotbarApp(tk.Tk):
         self.status_dot.pack(side="left", padx=(0, 8))
         ttk.Label(footer, textvariable=self.status, style="Muted.TLabel").pack(side="left")
         ttk.Label(footer, text=f"v{__version__}", style="Muted.TLabel").pack(side="right")
-        self._show_page("Рандомайзер")
+        self._show_page("Randomizer")
         self._scale_spacing(self.page_host)
 
     def _panel(self, parent, height, padding=18):
@@ -230,7 +230,7 @@ class HotbarApp(tk.Tk):
                 self.hotbar.create_text(x + size / 2, px(self,4) + size / 2, text=key,
                                         fill=c["on_accent"] if selected else c["fg"] if active else c["muted"],
                                         font=(c["font"], 14, "bold"))
-        self.priority_summary.configure(text=f"{self.priority.get()}  ·  {self.chance.get()}%" if self.bias.get() else "Выключен")
+        self.priority_summary.configure(text=f"{self.priority.get()}  ·  {self.chance.get()}%" if self.bias.get() else "Off")
 
     def _draw_status(self):
         if not self.colors:
@@ -260,20 +260,20 @@ class HotbarApp(tk.Tk):
             )
             backend = create_backend()
         except (ValueError, RuntimeError) as error:
-            messagebox.showerror("Не удалось запустить", str(error), parent=self)
+            messagebox.showerror("Could not start", str(error), parent=self)
             return
         if self.runner.start(config, backend):
             self.pending = True
             self.last_key = None
             self._draw_hotbar()
             self.deadline = time.monotonic() + config.start_delay
-            self.status.set("Переключитесь в Minecraft…")
+            self.status.set("Switch to Minecraft…")
             self._set_running(True)
 
     def _stop(self):
         self.runner.stop()
         if self.pending:
-            self.status.set("Останавливаем…")
+            self.status.set("Stopping…")
             self.stop_button.configure(state="disabled")
 
     def _poll(self):
@@ -282,25 +282,25 @@ class HotbarApp(tk.Tk):
                 event, value = self.runner.events.get_nowait()
                 if event == "started":
                     self.deadline = 0
-                    self.status.set("Работает · переключитесь в игру")
+                    self.status.set("Running · switch to the game")
                 elif event == "key":
                     self.last_key = value
                     self._draw_hotbar()
-                    self.status.set(f"Работает · последняя клавиша: {value}")
+                    self.status.set(f"Running · last key: {value}")
                 elif event == "error":
-                    messagebox.showerror("Ошибка отправки клавиши", value, parent=self)
+                    messagebox.showerror("Could not send key", value, parent=self)
                 elif event == "stopped":
                     # Wait for the old worker to exit before enabling another run.
                     self.pending = False
                     self.deadline = 0
-                    self.status.set("Остановлено")
+                    self.status.set("Stopped")
         except queue.Empty:
             pass
         if not self.pending and not self.runner.running:
             self._set_running(False)
         elif self.deadline and str(self.stop_button.cget("state")) != "disabled":
             seconds = max(0, int(self.deadline - time.monotonic()) + 1)
-            self.status.set(f"Старт через {seconds} сек. · переключитесь в игру")
+            self.status.set(f"Starting in {seconds}s · switch to the game")
         self._poll_id = self.after(80, self._poll)
 
     def destroy(self):

@@ -54,11 +54,11 @@ class FieldTests(unittest.TestCase):
         menu.event_generate("<Up>")
         menu.event_generate("<Return>")
         self.app.update()
-        self.assertEqual(self.app.speed.get(),"Средне")
+        self.assertEqual(self.app.speed.get(),"Medium")
         self.assertIsNone(field.popup)
         field._open_popup()
         self.app.update()
-        self.app.theme.set("Тёмная")
+        self.app.theme.set("Dark")
         self.app.update()
         self.assertIsNone(field.popup)
         self.assertEqual(field.colors,self.app.colors)
@@ -92,9 +92,9 @@ class FieldTests(unittest.TestCase):
 
     def test_small_window_keeps_stop_button_visible_without_scrollbar(self):
         self.app.geometry("660x620")
-        self.app._show_page("Помощь")
+        self.app._show_page("Help")
         self.app.update()
-        page=self.app.pages["Помощь"]
+        page=self.app.pages["Help"]
         self.assertTrue(page.overflow)
         self.assertFalse(any(child.winfo_class()=="TScrollbar" for child in page.winfo_children()))
         self.assertTrue(self.app.stop_button.winfo_ismapped())

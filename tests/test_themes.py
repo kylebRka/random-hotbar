@@ -21,7 +21,7 @@ class ThemeTests(unittest.TestCase):
             # Reproduce the user's Tk 9 state without relying on its occurrence
             # in a particular Python/Tk patch version.
             app.tk.call("unset", "-nocomplain", "::ttk::currentTheme")
-            for name in ("Светлая", "Тёмная", "Системная", "Светлая", "Тёмная"):
+            for name in ("Light", "Dark", "System", "Light", "Dark"):
                 with self.subTest(theme=name):
                     app.theme.set(name)
                     app.update()

@@ -3,7 +3,7 @@ import sys
 from tkinter import font as tkfont
 
 PALETTES = {
-    "Светлая": {
+    "Light": {
         "bg": "#eaf0f8", "card": "#f7f9fd", "fg": "#172034",
         "muted": "#667286", "accent": "#007aff", "accent_hover": "#228bff",
         "on_accent": "#ffffff", "border": "#d8e0ed", "hover": "#e8f0fe",
@@ -11,7 +11,7 @@ PALETTES = {
         "shadow": "#d6dfed", "nav": "#dfe7f3",
         "nav_hover": "#edf2fa", "slot_border": "#d0dced",
     },
-    "Тёмная": {
+    "Dark": {
         "bg": "#171d2b", "card": "#272f40", "fg": "#f3f5fc",
         "muted": "#a5afc3", "accent": "#0a84ff", "accent_hover": "#409eff",
         "on_accent": "#ffffff", "border": "#4a556d", "hover": "#35425a",
@@ -29,8 +29,8 @@ def interface_font(root):
 
 
 def apply_theme(root, style, name, system_bg):
-    if name == "Системная":
-        name = "Тёмная" if sum(root.winfo_rgb(system_bg)) / 3 < 32768 else "Светлая"
+    if name == "System":
+        name = "Dark" if sum(root.winfo_rgb(system_bg)) / 3 < 32768 else "Light"
     c = dict(PALETTES[name], font=interface_font(root))
     root.configure(bg=c["bg"])
     # Tk 9 no longer consistently exposes the private ttk::currentTheme

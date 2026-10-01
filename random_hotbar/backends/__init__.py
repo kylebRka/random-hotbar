@@ -4,6 +4,6 @@ import sys
 
 def create_backend():
     if sys.platform != "darwin":
-        raise RuntimeError("Эта версия поддерживает macOS. Версия для Windows находится в разработке.")
+        raise RuntimeError("This release supports macOS. The Windows version is in development.")
     from .macos import MacOSKeyboard
     return MacOSKeyboard()

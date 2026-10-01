@@ -108,7 +108,7 @@ class MacBackendTests(unittest.TestCase):
         quartz = Mock()
         quartz.CGPreflightPostEventAccess.return_value = False
         with patch.dict("sys.modules", {"Quartz": quartz}):
-            with self.assertRaisesRegex(RuntimeError, "Универсальный доступ"):
+            with self.assertRaisesRegex(RuntimeError, "Accessibility"):
                 MacOSKeyboard()
 
     def test_key_is_released_if_hold_fails(self):

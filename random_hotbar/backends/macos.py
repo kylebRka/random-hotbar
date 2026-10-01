@@ -10,13 +10,13 @@ class MacOSKeyboard:
         try:
             import Quartz
         except ImportError as error:
-            raise RuntimeError("Установите зависимости: python3 -m pip install -r requirements.txt") from error
+            raise RuntimeError("Install dependencies: python3 -m pip install -r requirements.txt") from error
         self.quartz = Quartz
         if not Quartz.CGPreflightPostEventAccess():
             raise RuntimeError(
-                "Разрешите управление компьютером в Настройки системы → "
-                "Конфиденциальность и безопасность → Универсальный доступ "
-                "для приложения, из которого запущен Python, затем перезапустите его."
+                "Allow keyboard control in System Settings → "
+                "Privacy & Security → Accessibility "
+                "for the application running Python, then restart that application."
             )
 
     def press(self, key):
@@ -25,7 +25,7 @@ class MacOSKeyboard:
         down = quartz.CGEventCreateKeyboardEvent(None, code, True)
         up = quartz.CGEventCreateKeyboardEvent(None, code, False)
         if down is None or up is None:
-            raise RuntimeError("Quartz не удалось создать событие клавиатуры.")
+            raise RuntimeError("Quartz could not create a keyboard event.")
         quartz.CGEventPost(quartz.kCGHIDEventTap, down)
         try:
             time.sleep(0.05)
